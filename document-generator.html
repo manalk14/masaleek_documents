@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Masaleek Document Generator</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📄</text></svg>">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+:root{--bg:#f3f4f6;--card:#fff;--ink:#1f2937;--mute:#6b7280;--line:#d1d5db;--acc:#1d4ed8;--acc-ink:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#111827;--card:#1f2937;--ink:#f3f4f6;--mute:#9ca3af;--line:#374151;--acc:#60a5fa;--acc-ink:#0b1220}}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.45 "Segoe UI",system-ui,Arial,sans-serif}
+.wrap{max-width:900px;margin:0 auto;padding:20px 16px 60px}
+h1{font-size:24px;margin:0 0 4px}h2{font-size:20px;margin:0}
+.sub{color:var(--mute);margin:0 0 20px}
+.grid4{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.tile{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:20px 16px;text-align:left;cursor:pointer;color:var(--ink);font:inherit}
+.tile:hover,.tile:focus-visible{border-color:var(--acc);outline:2px solid var(--acc)}
+.tile b{display:block;font-size:17px;margin-bottom:4px}.tile span{color:var(--mute);font-size:13px}
+.panel{background:var(--card);border:1px solid var(--line);border-radius:10px;padding:18px}
+.top{display:flex;align-items:center;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.fg{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.f{display:flex;flex-direction:column;gap:4px}.f.full{grid-column:1/-1}
+label{font-size:13px;color:var(--mute)}
+input,textarea{font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:8px;width:100%}
+input:focus,textarea:focus{outline:2px solid var(--acc);border-color:var(--acc)}
+textarea{resize:vertical;min-height:60px}
+h3{margin:20px 0 8px;font-size:16px}
+.rows{display:flex;flex-direction:column;gap:8px}
+.row{display:grid;gap:8px;align-items:end;padding:10px;border:1px solid var(--line);border-radius:8px}
+.btn{font:inherit;border:1px solid var(--line);background:var(--card);color:var(--ink);padding:9px 16px;border-radius:6px;cursor:pointer}
+.btn.p{background:var(--acc);color:var(--acc-ink);border-color:var(--acc);font-weight:600}
+.btn:hover{filter:brightness(.95)}.btn:disabled{opacity:.6;cursor:wait}
+.bar{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.hide{display:none!important}
+.scroll{overflow-x:auto;padding:4px 0}
+#sheet{background:#fff;color:#000;width:210mm;min-height:296mm;margin:0 auto;box-shadow:0 2px 12px rgba(0,0,0,.25);font:11px/1.5 "Open Sans","Segoe UI",Arial,sans-serif;overflow:hidden}
+#sheet .pg{padding:0 13mm}
+#sheet .ttl{text-align:center;font-weight:700;font-size:15px}
+#sheet .pre{white-space:pre-line}
+#sheet .bx{border:1px solid #000}
+#sheet .fx{display:flex}
+#sheet .gh{background:#f2f2f2;font-weight:700;text-align:center;border-bottom:1px solid #000;padding:3px 0}
+#sheet .g2{display:grid;grid-template-columns:1fr 1fr;gap:2px 6px;padding:4px}
+#sheet .kv{display:flex}#sheet .kv span{flex:none}#sheet .kv span:last-child{flex:1}#sheet .kb span:first-child{font-weight:700}
+#sheet table{width:100%;border-collapse:collapse;table-layout:fixed}
+#sheet .it th,#sheet .it td{border:1px solid #000;border-width:1px 1px 1px 0;padding:2px 6px;height:30px;vertical-align:top}
+#sheet .it th{height:22px;border-top:0;background:#f2f2f2;font-weight:700;text-align:center}
+#sheet .it td:first-child,#sheet .it th:first-child{border-left:0}#sheet .it td:last-child,#sheet .it th:last-child{border-right:0}
+#sheet .c{text-align:center}#sheet .r{text-align:right}
+#sheet .tot{display:flex;justify-content:flex-end;border-top:1px solid #000;padding:2px 0;font-weight:700}
+#sheet .tot b{margin-right:10px}#sheet .tot span{width:11%;text-align:right;font-weight:400;padding-right:6px}
+#sheet .dt th,#sheet .dt td,#sheet .wt th,#sheet .wt td{border:1px solid #000;padding:2px 6px}
+#sheet .dt td{height:28px}#sheet .dt th{height:24px;text-align:center}
+#sheet .wt th{background:#f2f2f2;text-align:left;width:33%;padding:5px 7px}#sheet .wt td{padding:5px 7px}
+#sheet .inv{font-size:10.5px;letter-spacing:1px}
+#sheet .iv th{font-weight:700;padding:9px 8px;border-top:1px solid #000;border-bottom:1px solid #000}
+#sheet .iv td{padding:6px 8px;vertical-align:top}
+
+:root{--top:#eef2ff}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--top:#1e293b}}
+body{background:linear-gradient(180deg,var(--top) 0,var(--bg) 340px) no-repeat,var(--bg)}
+.hero{background:linear-gradient(120deg,#2563eb,#7c3aed 55%,#ec4899);color:#fff;border-radius:16px;padding:28px 24px;margin-bottom:20px}
+.hero h1{font-size:26px;margin:0 0 6px;color:#fff}.hero p{margin:0;opacity:.92}
+.tile{position:relative;border-top:4px solid var(--a);border-radius:14px;padding:18px 16px;transition:transform .15s,box-shadow .15s}
+.tile:hover,.tile:focus-visible{border-color:var(--a);outline:2px solid var(--a);transform:translateY(-2px);box-shadow:0 8px 20px rgba(0,0,0,.12)}
+.ic{display:grid;place-items:center;width:46px;height:46px;border-radius:12px;background:color-mix(in srgb,var(--a) 16%,transparent);font-style:normal;font-size:22px;margin-bottom:12px}
+#formView .panel{border-top:4px solid var(--a,var(--acc));border-radius:14px}
+#formView h2{color:var(--a,var(--ink))}
+#formView h3{color:var(--a,var(--ink))}
+#formView input:focus,#formView textarea:focus{outline:2px solid var(--a,var(--acc));border-color:var(--a,var(--acc))}
+#formView .btn.p,#previewView .btn.p{background:var(--a,var(--acc));border-color:var(--a,var(--acc));color:#fff}
+#formView .add{border-color:var(--a,var(--line));color:var(--a,var(--ink))}
+.row{background:color-mix(in srgb,var(--a,#888) 5%,transparent)}
+@page{size:A4;margin:0}
+@media print{
+ html,body{background:#fff!important}
+ .no-print{display:none!important}
+ .wrap{padding:0;max-width:none}.scroll{overflow:visible;padding:0}
+ #sheet{box-shadow:none;margin:0}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <div id="home" class="no-print">
+  <div class="hero"><h1>Create your documents in seconds</h1><p>Pick a document, fill in the details, then print it or save it as a PDF.</p></div>
+  <div class="grid4" id="tiles"></div>
+ </div>
+ <div id="formView" class="no-print hide">
+  <div class="top"><button class="btn" id="backHome" type="button">Back</button><h2 id="formTitle"></h2></div>
+  <div class="panel" id="forms"></div>
+ </div>
+ <div id="previewView" class="hide">
+  <div class="top no-print">
+   <button class="btn" id="backForm" type="button">Edit details</button>
+   <button class="btn" id="printBtn" type="button">Print</button>
+   <button class="btn p" id="pdfBtn" type="button">Download PDF</button>
+  </div>
+  <div class="scroll"><div id="sheet"></div></div>
+ </div>
+</div>
+<script>
+const CO="Masaleek Trading and Contracting";
+const E=s=>String(s==null?"":s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const N=v=>parseFloat(v)||0;
+const M=v=>N(v).toLocaleString("en-US",{minimumFractionDigits:2,maximumFractionDigits:2});
+const I=v=>Number.isInteger(v)?v.toLocaleString("en-US"):M(v);
+const FD=(v,s)=>{if(!v)return"";const p=v.split("-");return p.length===3?p[2]+s+p[1]+s+p[0]:v};
+const T=v=>E(v).replace(/\n/g,"<br>");
+function words(n){
+ const o=["","One","Two","Three","Four","Five","Six","Seven","Eight","Nine","Ten","Eleven","Twelve","Thirteen","Fourteen","Fifteen","Sixteen","Seventeen","Eighteen","Nineteen"],t=["","","Twenty","Thirty","Forty","Fifty","Sixty","Seventy","Eighty","Ninety"];
+ const h=x=>x<20?o[x]:x<100?t[Math.floor(x/10)]+(x%10?" "+o[x%10]:""):o[Math.floor(x/100)]+" Hundred"+(x%100?" "+h(x%100):"");
+ const w=x=>{if(!x)return"Zero";let r="";[[1e9,"Billion"],[1e6,"Million"],[1e3,"Thousand"]].forEach(([v,nm])=>{if(x>=v){r+=h(Math.floor(x/v))+" "+nm+" ";x%=v}});if(x)r+=h(x);return r.trim()};
+ const r=Math.round(n*100),q=Math.floor(r/100),f=r%100;
+ return "Qatari Riyals "+w(q)+(f?" and "+w(f)+" Dirhams":"")+" Only";
+}
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const kv=(l,v,w,b)=>`<div class="kv${b?" kb":""}"><span style="width:${w}px">${l}</span><span style="width:10px">:</span><span class="pre">${E(v)}</span></div>`;
+const UL="____________________";
+
+const DOCS={
+ po:{c:"#2563eb",ic:"🛒",name:"Purchase Order",desc:"Order goods from a supplier",file:"Purchase_Order",
+  fields:[["poNo","PO No."],["poDate","PO Date","", "date"],["payTerm","Pay Term","30 days"],["currency","Currency","QAR"],["invoiceTo","Invoice To",CO],["supplier","Supplier Name"],["address","Contact Address"],["person","Contact Person"],["country","Country","Qatar"],["mobile","Mobile"],["delivery","Delivery Address"],["note","Document Level Note","","textarea"],["createdBy","Created by"],["approvedBy","Approved By"]],
+  cols:[["desc","Item Code and Description","text"],["qty","Quantity","number"],["rate","Unit Rate","number"]],
+  render(d,it){
+   const tot=it.reduce((a,r)=>a+N(r.qty)*N(r.rate),0);let tr="";
+   for(let i=0;i<Math.max(5,it.length);i++){const r=it[i];tr+=`<tr><td class="c">${r?i+1:""}</td><td class="pre">${r?E(r.desc):""}</td><td class="c">${r?E(r.qty):""}</td><td class="r">${r?M(r.rate):""}</td><td class="r">${r?M(N(r.qty)*N(r.rate)):""}</td></tr>`}
+   return `<div class="pg" style="padding-top:50mm"><div class="bx">
+   <div class="ttl" style="padding:5px;border-bottom:1px solid #000">PURCHASE ORDER</div>
+   <div class="fx"><div style="width:59%;border-right:1px solid #000">
+    <div class="gh">PURCHASE ORDER DETAILS</div>
+    <div class="g2">${kv("PO No.",d.poNo,60)}${kv("PO Date",FD(d.poDate,"/"),50)}</div>
+    <div class="gh" style="border-top:1px solid #000">SUPPLIER DETAILS</div>
+    <div class="g2">${kv("Supplier Name",d.supplier,72)}${kv("Contact Address",d.address,80)}${kv("Contact Person",d.person,72)}${kv("Country",d.country,80)}${kv("Mobile",d.mobile,72)}</div>
+   </div><div style="width:41%"><div class="gh">TERMS &amp; CONDITIONS</div>
+    <div style="padding:4px 6px">${kv("Pay Term",d.payTerm,55)}${kv("Currency",d.currency,55)}${kv("Invoice To",d.invoiceTo,55)}</div></div></div>
+   <div class="gh" style="border-top:1px solid #000">ITEM DETAILS</div>
+   <table class="it"><colgroup><col style="width:6%"><col style="width:63%"><col style="width:10%"><col style="width:10%"><col style="width:11%"></colgroup>
+   <tr><th>S.No</th><th>Item Code and Description</th><th>Quantity</th><th>Unit Rate</th><th>Value</th></tr>${tr}</table>
+   <div class="tot" style="margin-top:-1px"><b>Gross Price</b><span>${M(tot)}</span></div>
+   <div class="tot"><b>Grand Total</b><span>${M(tot)}</span></div>
+   <div class="fx" style="border-top:1px solid #000"><div style="width:59%;border-right:1px solid #000;padding:6px 4px;min-height:64px">${kv("Amount in Words",words(tot),100,1)}${kv("Delivery Address",d.delivery,100,1)}</div>
+    <div style="width:41%;padding:6px;display:flex;flex-direction:column;justify-content:space-between"><b>For : ${E(d.invoiceTo)}</b><b style="text-align:center">(Authorized Signatory)</b></div></div>
+   <div class="fx" style="border-top:1px solid #000;min-height:58px"><div style="width:59%;border-right:1px solid #000;padding:6px 4px;display:flex;flex-direction:column;justify-content:space-between"><div><b>Document Level Note :</b> ${T(d.note)}</div><b>Created by: ${E(d.createdBy)}</b></div>
+    <div style="width:41%;padding:6px;display:flex;align-items:flex-end"><b>Approved By: ${E(d.approvedBy)}</b></div></div>
+   </div></div>`}},
+ dn:{c:"#059669",ic:"🚚",name:"Delivery Note",desc:"Record goods delivered",file:"Delivery_Note",
+  fields:[["customer","Customer","Ministry of Culture"],["place","Customer Location","ALKHOR Public Library"],["remarks","Remarks","Supply and Installation"],["date","Date","","date"],["poNo","PO No"],["lpoDate","LPO Date","","date"],["dest","Destination","ALKHOR"]],
+  cols:[["code","Item Code","text"],["desc","Description","text"],["brand","Brand","text"],["qty","Qty","number"]],
+  render(d,it){
+   let tr="";
+   for(let i=0;i<Math.max(8,it.length);i++){const r=it[i];tr+=`<tr><td class="c">${r?String(i+1).padStart(2,"0"):""}</td><td>${r?E(r.code):""}</td><td class="pre">${r?E(r.desc):""}</td><td class="c">${r?E(r.brand):""}</td><td class="c">${r?E(r.qty):""}</td></tr>`}
+   return `<div class="pg" style="padding:45mm 25mm 0;font-size:10.5px"><div class="ttl">DELIVERY NOTE</div>
+   <div class="fx" style="margin-top:22px"><div style="width:52%">${kv("Customer",d.customer,60)}<div style="padding-left:70px">${E(d.place)}</div>${kv("Remarks",d.remarks,60)}</div>
+   <div style="flex:1">${kv("Date",FD(d.date,"/"),72)}${kv("PO No",d.poNo,72)}${kv("LPO Date",FD(d.lpoDate,"/"),72)}${kv("Destination",d.dest,72)}</div></div>
+   <table class="dt" style="margin-top:24px"><colgroup><col style="width:9%"><col style="width:22%"><col style="width:41%"><col style="width:14%"><col style="width:14%"></colgroup>
+   <tr><th>Sl No</th><th>Item Code</th><th>Description</th><th>Brand</th><th>Qty</th></tr>${tr}</table>
+   <div class="fx" style="margin-top:30px"><div style="width:50%"><b>${CO}</b><div>Doha, Qatar.</div><div style="margin-top:28px;width:95px;border-top:1px solid #000"></div></div>
+   <div style="flex:1;line-height:1.9"><b>Goods Received in Good Condition</b>${kv("Receiver’s Name",UL,86)}${kv("Date",UL,86)}${kv("Signature",UL,86)}</div></div></div>`}},
+ inv:{c:"#ea580c",ic:"💰",name:"Invoice",desc:"Bill the client",file:"Invoice",
+  fields:[["no","Invoice No"],["date","Date","","date"],["to","Issued To","Ministry of Culture\nMain office in Cornich","textarea"],["lpo","LPO"],["subject","Work Description","","textarea"],["bene","Beneficiary Name",CO],["bank","Bank Name","Qatar National Bank"],["acc","Account No","0250 074199 001"],["iban","IBAN No","QA64 QNBA 0000 0000 0250 0741 9900 1"]],
+  cols:[["desc","Description","text"],["qty","Qty","number"],["price","Unit Price","number"]],
+  render(d,it){
+   const tot=it.reduce((a,r)=>a+N(r.qty)*N(r.price),0),P=v=>String(Math.round(v*100)/100);
+   const tr=it.map(r=>`<tr><td class="pre">${E(r.desc)}</td><td class="c">${P(N(r.price))}</td><td class="c">${E(r.qty)}</td><td class="r">${P(N(r.qty)*N(r.price))}</td></tr>`).join("");
+   const w=words(tot).replace("Qatari Riyals","").replace(" Only","").trim().toUpperCase();
+   return `<div class="pg inv" style="padding:33mm 21mm 0 23mm">
+   <div class="ttl" style="letter-spacing:2px">CASH / CREDIT INVOICE</div>
+   <div class="fx" style="justify-content:space-between;margin-top:34px"><div style="width:62%"><b>ISSUED TO:</b><div class="pre" style="margin-top:6px">${E(d.to)}${d.lpo?"\nLPO: "+E(d.lpo):""}${d.subject?"\n"+E(d.subject):""}</div></div>
+   <div style="text-align:right"><b>INVOICE NO:</b> &nbsp;<b>${E(d.no)}</b><div>DATE: &nbsp; ${FD(d.date,".")}</div></div></div>
+   <table class="iv" style="margin-top:26px"><colgroup><col style="width:48%"><col style="width:18%"><col style="width:14%"><col style="width:20%"></colgroup>
+   <tr><th>DESCRIPTION</th><th class="c">UNIT PRICE</th><th class="c">QTY</th><th class="r">TOTAL</th></tr>${tr}<tr><td colspan="4" style="height:${Math.max(30,120-it.length*28)}px"></td></tr></table>
+   <div class="fx" style="justify-content:space-between;border-top:1px solid #000;padding:9px 8px 0"><b>SUBTOTAL</b><b>${I(tot)}</b></div>
+   <div class="fx" style="justify-content:space-between;padding:14px 8px 0"><b style="width:52%">TOTAL AMOUNT INCLUDING MATERIAL AND LABOR CHARGE</b><b>TOTAL</b><b>QR ${I(tot)}</b></div>
+   <div style="font-size:9px;font-weight:700;padding:8px 8px 0">(${E(w)} QATAR RIYAL ONLY)</div>
+   <div style="padding:22px 8px 0"><b>PAY TO:</b></div>
+   <div style="padding:12px 8px 0">${kv("Beneficiary Name",d.bene,125)}${kv("Bank Name",d.bank,125)}<div style="height:14px"></div>${kv("Account No",d.acc,125)}${kv("IBAN No",d.iban,125)}</div>
+   <div class="fx" style="justify-content:space-between;align-items:flex-end;margin-top:90px;padding:0 4px"><div style="font:14px/1.3 Poppins,'Segoe UI',Arial,sans-serif;letter-spacing:0;width:140px">Thank you for your business!</div>
+   <div style="width:190px;text-align:center;border-top:2px solid #000;padding-top:6px;font-size:9.5px">Authorized Signed</div></div></div>`}},
+ wcr:{c:"#7c3aed",ic:"✅",name:"Work Completion Report",desc:"Confirm finished work",file:"Work_Completion_Report",
+  fields:[["ref","Ref No"],["date","Date","","date"],["client","Client","Ministry of Culture"],["project","Project Name"],["loc","Location"],["closing","Closing Statement","The above work has been completed successfully. The site has been cleaned and handed over to the client.","textarea"],["sname","Signatory Name"],["stitle","Title","Manager"],["smob","Mobile"]],
+  cols:[["desc","Work Description (e.g. Window AC servicing - 13 nos)","text"]],
+  render(d,it){
+   return `<div class="pg" style="padding:58mm 25mm 0;font-size:12px"><div class="ttl" style="font-size:16px">WORK COMPLETION REPORT</div>
+   <div class="fx" style="justify-content:space-between;margin-top:34px"><span>Ref No: ${E(d.ref)}</span><span>Date: ${FD(d.date,"/")}</span></div>
+   <table class="wt" style="margin-top:10px"><tr><th>Client</th><td>${E(d.client)}</td></tr><tr><th>Project Name</th><td>${E(d.project)}</td></tr><tr><th>Location</th><td>${E(d.loc)}</td></tr></table>
+   <div style="margin-top:14px"><b>Description</b></div>${it.map((r,i)=>`<div>${i+1}. &nbsp;${E(r.desc)}</div>`).join("")}
+   <p style="margin:10px 0 0">${T(d.closing)}</p>
+   <div class="fx" style="margin-top:40px"><div style="width:51%;padding-left:5px"><b>${E(d.sname)}</b><br>${E(d.stitle)}<br>Mob: ${E(d.smob)}<br>${CO},<br>Doha, Qatar.</div>
+   <div style="flex:1"><b>Receiver</b>${kv("Name",UL,55)}${kv("Date",UL,55)}${kv("Signature",UL,55)}</div></div></div>`}}
+};
+
+const $=id=>document.getElementById(id);
+let cur=null;
+const show=v=>{["home","formView","previewView"].forEach(x=>$(x).classList.toggle("hide",x!==v));window.scrollTo(0,0)};
+
+function buildRow(key,vals){
+ const c=DOCS[key].cols,div=document.createElement("div");
+ div.className="row";div.style.gridTemplateColumns=`repeat(${c.length},minmax(0,1fr)) auto`;
+ div.innerHTML=c.map(([k,l,ty,def])=>`<div class="f"><label>${E(l)}</label><input data-k="${k}" type="${ty==="number"?"number":"text"}" ${ty==="number"?'step="any" min="0"':""} value="${E(vals&&vals[k]!=null?vals[k]:"")}"></div>`).join("")+`<button type="button" class="btn" aria-label="Remove item">Remove</button>`;
+ div.querySelector("button").onclick=()=>{const rs=div.parentNode;if(rs.children.length>1)div.remove();else alert("At least one item is required.")};
+ return div;
+}
+function buildForm(key){
+ const D=DOCS[key],f=document.createElement("form");
+ f.id="form-"+key;f.className="hide";f.noValidate=false;
+ f.innerHTML=`<div class="fg">${D.fields.map(([id,l,def,ty])=>{
+  const v="";
+  const inp=ty==="textarea"?`<textarea name="${id}">${E(v)}</textarea>`:`<input name="${id}" type="${ty||"text"}" value="${E(v)}">`;
+  return `<div class="f ${ty==="textarea"?"full":""}"><label>${E(l)}</label>${inp}</div>`}).join("")}</div>
+  <h3>Items</h3><div class="rows"></div>
+  <div class="bar"><button type="button" class="btn add">+ Add item</button></div>
+  <div class="bar"><button type="submit" class="btn p">Submit</button></div>`;
+ const rows=f.querySelector(".rows");rows.appendChild(buildRow(key));
+ f.querySelector(".add").onclick=()=>rows.appendChild(buildRow(key));
+ f.onsubmit=e=>{
+  e.preventDefault();
+  const d=Object.fromEntries(new FormData(f).entries());
+  const items=[...rows.children].map(r=>Object.fromEntries([...r.querySelectorAll("input")].map(i=>[i.dataset.k,i.value.trim()]))).filter(r=>Object.values(r).some(v=>v&&v!=="Nos"));
+  if(!items.length){alert("Please add at least one item.");return}
+  $("sheet").innerHTML=D.render(d,items);
+  show("previewView");
+ };
+ $("forms").appendChild(f);
+}
+Object.entries(DOCS).forEach(([k,D])=>{
+ buildForm(k);
+ const b=document.createElement("button");b.type="button";b.className="tile";
+ b.style.setProperty("--a",D.c);b.innerHTML=`<i class="ic">${D.ic}</i><b>${D.name}</b><span>${D.desc}</span>`;
+ b.onclick=()=>{cur=k;$("formView").style.setProperty("--a",D.c);$("previewView").style.setProperty("--a",D.c);$("formTitle").textContent=D.name;Object.keys(DOCS).forEach(x=>$("form-"+x).classList.toggle("hide",x!==k));show("formView")};
+ $("tiles").appendChild(b);
+});
+$("backHome").onclick=()=>show("home");
+$("backForm").onclick=()=>show("formView");
+$("printBtn").onclick=()=>window.print();
+$("pdfBtn").onclick=async()=>{
+ const b=$("pdfBtn");b.disabled=true;b.textContent="Preparing PDF...";
+ try{
+  if(typeof html2pdf==="undefined")throw new Error("PDF library not loaded");
+  const el=$("sheet"),prev=el.style.boxShadow;el.style.boxShadow="none";
+  await html2pdf().set({margin:0,filename:DOCS[cur].file+"_"+today()+".pdf",image:{type:"jpeg",quality:.98},html2canvas:{scale:2,useCORS:true,scrollX:0,scrollY:0},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"},pagebreak:{mode:["css","legacy"]}}).from(el).save();
+  el.style.boxShadow=prev;
+ }catch(e){alert("Could not create the PDF. Please use Print and choose Save as PDF.")}
+ b.disabled=false;b.textContent="Download PDF";
+};
+</script>
+</body>
+</html>
